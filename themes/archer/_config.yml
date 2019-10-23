@@ -50,9 +50,9 @@ main_title: Monya's Blog.
 # subtitle
 subtitle: Just do it！
 # site haeder image
-site_header_image: 'https://lh5.googleusercontent.com/proxy/rRX1lWRu8_QRIKZikh2cu-z90TfV4TzJzA9c1ZzHE3ebb9qxly2jvUT99ie-lrOxP3KvmJeO7LKo5lOCz2g9NI99M1locs7IWeGX=w3840-h2160-p-k-no-nd-mv'
+site_header_image: 'http://ww1.sinaimg.cn/large/005AEOualy1g885njea83j32yo1o0b1c.jpg'
 # post haeder image
-post_header_image: 'https://lh5.googleusercontent.com/proxy/rRX1lWRu8_QRIKZikh2cu-z90TfV4TzJzA9c1ZzHE3ebb9qxly2jvUT99ie-lrOxP3KvmJeO7LKo5lOCz2g9NI99M1locs7IWeGX=w3840-h2160-p-k-no-nd-mv'
+post_header_image: 'http://ww1.sinaimg.cn/large/005AEOualy1g885njea83j32yo1o0b1c.jpg'
 # 404 image
 _404_image: '/intro/404-bg.jpg'
 
