@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title><![CDATA[记录ASP.NET项目和Vue项目部署到IIS的过程]]></title>
+      <url>/2019/07/26/%E8%AE%B0%E5%BD%95ASP.NET%E9%A1%B9%E7%9B%AE%E5%92%8CVue%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0IIS%E7%9A%84%E8%BF%87%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>近来需要部署项目，虽然还没定好部署到哪里，但先记录一下部署到IIS上面吧，感觉自己的记性越来越不好用了。</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="一、安装IIS"><a href="#一、安装IIS" class="headerlink" title="一、安装IIS"></a>一、安装IIS</h2><ol>
+<li><p>打开控制面板，找到 “程序”，点进去</p>
+<p><img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0301.png" alt="图1-1"></p>
+</li>
+<li><p>在 “程序和功能” 中找到 “启动或关闭Windows功能”</p>
+<p><img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0302.png" alt="图1-2"></p>
+</li>
+<li><p>启动 “Internet Information Services” 下的服务，如下图所示，设置好后点击确认</p>
+<p><img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0303.png" alt="图1-3"><br>以上，IIS已经安装了，可以在window10的搜索框搜索IIS打开IIS管理器</p>
+</li>
+</ol>
+<hr>
+<h2 id="二、部署ASP-NET项目"><a href="#二、部署ASP-NET项目" class="headerlink" title="二、部署ASP.NET项目"></a>二、部署ASP.NET项目</h2><ol>
+<li><p>项目右键选择 “发布”</p>
+<p><img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0304.png" alt="图2-1"></p>
+</li>
+<li><p>“发布方法” 选择 “文件系统”， 目标位置自行选择, 然后点击 “保存” 即可</p>
+<p><img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0305.png" alt="图2-2"></p>
+</li>
+<li><p>打开IIS管理器，右键 “网站”， 新建一个网站，然后类比下图，给网站取一个名字，选择应用程序池（应用程序池也可以右键新建一个），物理路径就是刚刚ASP.NET项目发布的文件路径，再设置好端口号即可</p>
+<p><img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0306.png" alt="图2-3"></p>
+</li>
+</ol>
+<p>以上，ASP.NET项目部署完成，可以在浏览器输入： <a href="http://localhost:设置的端口号" target="_blank" rel="noopener">http://localhost:设置的端口号</a> 访问</p>
+<hr>
+<h2 id="三、部署Vue项目"><a href="#三、部署Vue项目" class="headerlink" title="三、部署Vue项目"></a>三、部署Vue项目</h2><ol>
+<li>将项目打包，进入项目根目录，输入以下命令，然后会在项目根目录下生成一个 “dist” 文件夹，将 “dist” 复制粘贴到自己放置发布文件的文件夹中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yarn run build </span><br><span class="line">或者</span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0307.png" alt="图3-1"></p>
+<ol start="2">
+<li><p>打开IIS管理器，新建一个网站，物理路径选择刚刚放置 “dist” 文件夹</p>
+</li>
+<li><p>在IIS管理器中安装 “URL Rewrite” 模块和 “Application Request Routing” 模块</p>
+</li>
+</ol>
+<p>安装过程稍微有点慢，耐心等待一会儿。<a href="https://www.iis.net/downloads/microsoft/url-rewrite" target="_blank" rel="noopener">URL Rewrite下载地址</a>，<a href="https://www.iis.net/downloads/microsoft/application-request-routing" target="_blank" rel="noopener">Application Request Routing下载地址</a></p>
+<p>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0308.png" alt="图3-2"></p>
+<p>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0309.png" alt="图3-3"></p>
+<ol start="4">
+<li>URL重写</li>
+</ol>
+<p>点开IIS管理器左边侧栏中，与Vue项目相应的网站，找到 “URL 重写”，双击打开，然后新建规则（新建一个空白规则）</p>
+<p>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0310.png" alt="图4-0-1"><br>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0311.png" alt="图4-0-2"></p>
+<p>“匹配 URL” 处配置如下图，如果请求的api地址全都是为’/api/—‘，那 “模式” 那里填写</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^((?!(api)).)*$</span><br></pre></td></tr></table></figure>
+
+<p>即可，若是’/api/—‘或’/mvc/—‘，则填写</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^((?!(api|mvc)).)*$</span><br></pre></td></tr></table></figure>
+
+<p>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0312.png" alt="图4-1"></p>
+<p>“条件” 处配置如下，添加一个条件</p>
+<p>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0313.png" alt="图4-2"><br>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0314.png" alt="图4-3"></p>
+<p>“操作” 处配置如下，都指向’/index.html’</p>
+<p>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0315.png" alt="图4-4"></p>
+<ol start="5">
+<li>代理设置</li>
+</ol>
+<p>在IIS管理器的主页中可以看到 “Application Request Routing”，双击打开，然后在右边侧栏中找到 “Server Proxy Settings”，点进去勾选 “Enable proxy”</p>
+<p>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0316.png" alt="图5-0-1"><br>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0317.png" alt="图5-0-2"><br>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0318.png" alt="图5-0-2"></p>
+<p>然后在上一步操作过的 “URL 重写” 再新建一个规则（空白规则），配置如下，“重写 URL” 处根据自己要请求的后端实际地址填写，可以先在测试模式中测试一下</p>
+<p>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0319.png" alt="图5-1"><br>  <img src="https://raw.githubusercontent.com/MonyaPeng/uploadimage/master/blogimg/post3/0320.png" alt="图5-2"><br>至此，所有的设置都已经完成，前后端可以连通。（ps：虽然网上有很多说要在Vue项目中进行配置，但我没有进行额外的配置就成功部署了，如果有坑的话，后期再来填）。</p>
+<p>本文参考：<br><a href="https://blog.csdn.net/weixin_33888907/article/details/88859668" target="_blank" rel="noopener">vue项目部署在IIS上面的心得</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> 笔记 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> vue.js </tag>
+            
+            <tag> ASP.NET </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[vue组件间通信]]></title>
+      <url>/2019/07/23/vue%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>说实话，对于vue自己知道的是少之又少的皮毛，很多东西都是现查拿来用，感觉组件间的通信有点绕，来记录一下</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="ensp-一、组件通信之父子通信"><a href="#ensp-一、组件通信之父子通信" class="headerlink" title="&ensp;一、组件通信之父子通信"></a>&ensp;一、组件通信之父子通信</h2><h3 id="（1）子组件使用props选项接收来自父组件的数据"><a href="#（1）子组件使用props选项接收来自父组件的数据" class="headerlink" title="（1）子组件使用props选项接收来自父组件的数据"></a>（1）子组件使用props选项接收来自父组件的数据</h3><p>  <strong><em>注：这是一种单向绑定的方式，只能父组件给子组件传递</em></strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 父组件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">child</span> <span class="attr">v-bind:message</span>=<span class="string">"msg"</span>&gt;</span><span class="tag">&lt;/<span class="name">child</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> child <span class="keyword">from</span> <span class="string">'./components/child.vue'</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'father'</span>,</span></span><br><span class="line">  components:&#123;</span><br><span class="line">    child</span><br><span class="line">  &#125;,</span><br><span class="line">  data()&#123;</span><br><span class="line"><span class="actionscript">    <span class="keyword">return</span>&#123;</span></span><br><span class="line"><span class="actionscript">      msg:<span class="string">'hello child'</span></span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 子组件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  父组件说：&#123;&#123; message &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'child'</span>,</span></span><br><span class="line"><span class="actionscript">  props: [<span class="string">'message'</span>]</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="（2）通过-ref-’-‘-将子组件的实例指给-ref"><a href="#（2）通过-ref-’-‘-将子组件的实例指给-ref" class="headerlink" title="（2）通过 ref=’ ‘ 将子组件的实例指给 $ref"></a>（2）通过 ref=’ ‘ 将子组件的实例指给 $ref</h3><p>  <strong><em>父组件通过 $ref 拿到子组件的实例，从而调用子组件的方法</em></strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 父组件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">"$refs.msg.sayHello('hello child')"</span>&gt;</span>调用子组件的sayHello方法<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">child</span> <span class="attr">ref</span>=<span class="string">"msg"</span>&gt;</span><span class="tag">&lt;/<span class="name">child</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> child <span class="keyword">from</span> <span class="string">'./components/child.vue'</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'father'</span>,</span></span><br><span class="line">  components:&#123;</span><br><span class="line">    child</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 子组件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  父组件说：&#123;&#123; message &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'child'</span>,</span></span><br><span class="line">  methods: &#123;</span><br><span class="line">    sayHello (m) &#123;</span><br><span class="line"><span class="actionscript">      <span class="keyword">this</span>.message = m</span></span><br><span class="line">    &#125; </span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="ensp-二、组件通信之子父通信"><a href="#ensp-二、组件通信之子父通信" class="headerlink" title="&ensp;二、组件通信之子父通信"></a>&ensp;二、组件通信之子父通信</h2><h3 id="ensp-通过-emit-实现子组件向父组件通信"><a href="#ensp-通过-emit-实现子组件向父组件通信" class="headerlink" title="&ensp;通过 $emit 实现子组件向父组件通信"></a>&ensp;通过 $emit 实现子组件向父组件通信</h3><p><strong><em>子组件通过 $emit 绑定一个自定义事件event，父组件通过 @event 来监听这个事件并接收参数</em></strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 父组件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">child</span> @<span class="attr">returnHello</span>=<span class="string">"showMsg(value)"</span>&gt;</span><span class="tag">&lt;/<span class="name">child</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> child <span class="keyword">from</span> <span class="string">'./components/child.vue'</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'father'</span>,</span></span><br><span class="line">  components:&#123;</span><br><span class="line">    child</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    showMsg (value) &#123;</span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">'子组件传回：'</span>, value)</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 子组件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">"onClick()"</span>&gt;</span>触发自定义事件<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'child'</span>,</span></span><br><span class="line">  methods: &#123;</span><br><span class="line">    onClick () &#123;</span><br><span class="line"><span class="actionscript">      <span class="keyword">this</span>.$emit(<span class="string">'returnHello'</span>,<span class="string">'hello father'</span>)</span></span><br><span class="line">    &#125; </span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="ensp-三、任意及平行组件间的通信"><a href="#ensp-三、任意及平行组件间的通信" class="headerlink" title="&ensp;三、任意及平行组件间的通信"></a>&ensp;三、任意及平行组件间的通信</h2><h3 id="ensp-通过事件调度器-Event-来实现"><a href="#ensp-通过事件调度器-Event-来实现" class="headerlink" title="&ensp;通过事件调度器 Event 来实现"></a>&ensp;通过事件调度器 Event 来实现</h3><p><strong><em>首先，需要新建一个Vue实例作为组件之间通信的中间人</em></strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- mainVue.js --&gt;</span><br><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Vue()</span><br></pre></td></tr></table></figure>
+
+<p><strong><em>然后，在两个组件中使用通信中间人 Event</em></strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 组件一 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">"onClick()"</span>&gt;</span>给组件二传信<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> Event <span class="keyword">from</span> <span class="string">'../mainVue.js'</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'组件一'</span>,</span></span><br><span class="line">  methods: &#123;</span><br><span class="line">    onClick () &#123;</span><br><span class="line"><span class="actionscript">      Event.$emit(<span class="string">'ToTheSecondComponnet'</span>,<span class="string">'hello！'</span>)</span></span><br><span class="line">    &#125; </span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 组件二 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  组件一传来信息：&#123;&#123; message &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> Event <span class="keyword">from</span> <span class="string">'../mainVue.js'</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'组件一'</span>,</span></span><br><span class="line">  data() &#123;</span><br><span class="line"><span class="actionscript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="actionscript">      message: <span class="string">''</span></span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    onClick () &#123;</span><br><span class="line"><span class="actionscript">      Event.$on(<span class="string">'ToTheSecondComponnet'</span>, <span class="function"><span class="keyword">function</span><span class="params">(value)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">this</span>.message = value</span></span><br><span class="line">      &#125;)</span><br><span class="line">    &#125; </span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>本文参考：<br><a href="https://www.jianshu.com/p/91416e11f012" target="_blank" rel="noopener">vue之父子组件间通信实例讲解(props、$ref、$emit)</a><br><a href="https://www.codecasts.com/" target="_blank" rel="noopener">Laravel Vue.js 视频教程</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> 笔记 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> vue.js </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[开始记梦]]></title>
+      <url>/2019/07/19/hello-world/</url>
+      <content type="html"><![CDATA[<h2 id="ensp-“-开始的开始"><a href="#ensp-“-开始的开始" class="headerlink" title="&ensp;“ 开始的开始"></a>&ensp;“ 开始的开始</h2><p>&ensp;其实弄博客是一件我自己意料之外的事情，也算是受身边人影响，很久之前也想过要开个博客记录一下生活和学习，但是总下不了这个决心。<a id="more"></a>在此特别鸣谢现在的两位同期战友（ps：友链中仅有的二位👾🤖），让我能下决心开个博客。</p>
+<h2 id="ensp-“-翻看记录是一件幸福的事情"><a href="#ensp-“-翻看记录是一件幸福的事情" class="headerlink" title="&ensp;“ 翻看记录是一件幸福的事情"></a>&ensp;“ 翻看记录是一件幸福的事情</h2><p>&ensp;没事的时候我就喜欢翻相册，翻日记，翻微博，翻说说，翻很久以前的笔记，翻各种东西（小声bb，不就是念旧嘛）。岁月记得我所有的变化，这些东西就是藏在时间里的宝藏，也许能帮助我找到初心，指点迷津。</p>
+<h2 id="ensp-“-给自己"><a href="#ensp-“-给自己" class="headerlink" title="&ensp;“ 给自己"></a>&ensp;“ 给自己</h2><p>&ensp;之所以选择自己搭博客，最大的原因就是因为这样做像是自己的堡垒，没有那么多的束缚，也变得有趣很多。所以希望我可以坚持下去，记录生活，或是记录学习，总要留下一点痕迹（ps：但愿这不是个flag😹）。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 杂谈 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> blog </tag>
+            
+        </tags>
+        
+    </entry>
+    
+  
+  
+</search>
