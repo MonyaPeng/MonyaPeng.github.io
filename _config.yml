@@ -79,7 +79,9 @@ theme: archer
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/MonyaPeng/MonyaPeng.github.io.git
+  repository:
+    github: https://github.com/MonyaPeng/MonyaPeng.github.io.git
+    coding: https://git.dev.tencent.com/monyapeng/monyapeng.coding.me.git
   branch: master
 
 jsonContent:
